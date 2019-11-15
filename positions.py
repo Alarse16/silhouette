@@ -2,15 +2,21 @@ import cv2
 import numpy as np
 
 
+# the constructor
 class Positions:
     def __init__(self, name):
         self.name = name
 
-    def draw_positions_points(self, pos1, pos2, in_img):
-        cv2.circle(in_img, pos1, 10, (255, 0, 0), 2)
-        cv2.circle(in_img, pos2, 10, (255, 0, 0), 2)
-        if in_img[pos1] != 0 and in_img[pos2] != 0:
+    # this function draws circles on the positions and deteckts if they are filled
+    def draw_positions_points(self, pos1, pos2, in_img, source_image):
+        # cv2.circle(in_img, (pos1[1], pos1[0]), 10, (255, 0, 0), 2)
+        # cv2.circle(in_img, (pos2[1], pos2[0]), 10, (255, 0, 0), 2)
+
+        # draws the circle, (pos1[1], pos1[0]) looks like this becouse python takes y value first
+        cv2.circle(source_image, (pos1[1], pos1[0]), 10, (255, 0, 0), 2)
+        cv2.circle(source_image, (pos2[1], pos2[0]), 10, (255, 0, 0), 2)
+
+        # if both points are filled
+        if in_img[pos1] == 255 and in_img[pos2] == 255:
             return True
         return False
-
-    # def if_point_are_hit(self, pos1, pos2, in_img):
