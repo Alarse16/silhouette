@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
 from positions import Positions
+from silhuet import Silhuet
 
-positions_0 = Positions("nr0")  # initialising a Positions class
-
+_positions = Positions("pos")   # initialising a Positions class
+_silhuet = Silhuet("sil")       # initialising a Silhuet class
 
 # appllyes some amout of open and close operation on an image
 def open_close(img):
@@ -29,7 +30,6 @@ def positions(i):
         0: (50, 50, 300, 200),
         1: (50, 100, 70, 200),
         2: (200, 200, 20, 20),
-
     }
     return switcher.get(i)
 
@@ -58,13 +58,13 @@ if __name__ == "__main__":
             # asigns positions for pos1 and pos2 based on the function positions()
             pos1 = (positions(p)[0], positions(p)[1])
             pos2 = (positions(p)[2], positions(p)[3])
+            _silhuet.drawSilhuets(p, source_image)
 
             # calls the draw_positions_points() functions from the Positions class
-            if positions_0.draw_positions_points(pos2, pos1, out_img, source_image):
+            if _positions.draw_positions_points(pos2, pos1, out_img, source_image):
                 if p < 2:
                     p = p + 1
                 else:
-                    print(p)
                     p = 0
 
             cv2.imshow('opCl image', out_img)
