@@ -5,6 +5,7 @@ from silhuet import Silhuet
 
 _positions = Positions("pos")   # initialising a Positions class
 _silhuet = Silhuet("sil")       # initialising a Silhuet class
+points = 0                      # the score of the user
 
 # appllyes some amout of open and close operation on an image
 def open_close(img):
@@ -25,11 +26,23 @@ def calibrate():
     return bf
 
 
+def PointHandeler(in_image):
+
+    point_text = 'Points: ' + str(points)
+    font = cv2.FONT_HERSHEY_SIMPLEX         # font
+    org = (50, 50)                          # org
+    font_scale = 1                          # fontScale
+    color = (255, 0, 0)                     # Blue color in BGR
+    thickness = 2                           # Line thickness of 2 px
+    out = cv2.putText(in_image, point_text, org, font, font_scale, color, thickness, cv2.LINE_AA)
+    return out
+
+
 def positions(i):
-    switcher = {
-        0: (50, 50, 300, 200),
-        1: (50, 100, 70, 200),
-        2: (200, 200, 20, 20),
+    switcher = {                # positions of detection points
+        0: (135, 205, 440, 460),
+        1: (50, 435, 105, 435),
+        2: (250, 170, 90, 415),
     }
     return switcher.get(i)
 
@@ -55,13 +68,15 @@ if __name__ == "__main__":
             (thresh, out_img) = cv2.threshold(opcl_img, 200, 255, cv2.THRESH_BINARY)  # appllyes a threshold on the
             # image to remove noice
 
+            source_image = _silhuet.drawSilhuets(p, source_image)
+
             # asigns positions for pos1 and pos2 based on the function positions()
             pos1 = (positions(p)[0], positions(p)[1])
             pos2 = (positions(p)[2], positions(p)[3])
-            _silhuet.drawSilhuets(p, source_image)
 
             # calls the draw_positions_points() functions from the Positions class
             if _positions.draw_positions_points(pos2, pos1, out_img, source_image):
+                points = points + 1
                 if p < 2:
                     p = p + 1
                 else:
@@ -69,8 +84,8 @@ if __name__ == "__main__":
 
             cv2.imshow('opCl image', out_img)
 
+        PointHandeler(source_image)
         cv2.imshow('source_image', source_image)
-
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

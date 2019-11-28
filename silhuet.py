@@ -8,9 +8,9 @@ class Silhuet:
 
     def drawSilhuets(self, image_numper, source_image):
         img1 = source_image
-        img2 = cv2.imread('dab_pose.png')
+        image_name = ('Tai_Chi_Pose_' + str(image_numper+1) + '.jpg')
+        img2 = cv2.imread(image_name)
 
-        img3 = img1.copy()
-        # replace values at coordinates (100, 100) to (399, 399) of img3 with region of img2
-        img3[100:400, 100:400, :] = img2[100:400, 100:400, :]
-        cv2.imshow('Result1', img3)
+        alpha = 0.7
+        img3 = np.uint8(img1 * alpha + img2 * (1 - alpha))
+        return img3
