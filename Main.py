@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 points = points + 1
                 source_image = _silhuet.CorectMoveFeedback(p, source_image) # calls the function CorectMoveFeedback() from the class silhuet
                 delay = 1
-                winsound.PlaySound("bling.wav", winsound.SND_ASYNC)
+                winsound.PlaySound("Confirm_Sound_Piano.wav", winsound.SND_ASYNC)
                 if p < 2:
                     p = p + 1
                 else:
