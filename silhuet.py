@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import time
+
 
 class Silhuet:
     def __init__(self, name):
@@ -14,3 +16,13 @@ class Silhuet:
         alpha = 0.7
         img3 = np.uint8(img1 * alpha + img2 * (1 - alpha))
         return img3
+
+    def CorectMoveFeedback(self, image_numper, source_image):
+        img1 = source_image
+        image_name = ('Tai_Chi_Pose_' + str(image_numper + 1) + '_G' + '.jpg')
+        img2 = cv2.imread(image_name)
+
+        alpha = 0.7
+        img3 = np.uint8(img1 * alpha + img2 * (1 - alpha))
+        return img3
+

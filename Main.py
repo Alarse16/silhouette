@@ -2,10 +2,14 @@ import cv2
 import numpy as np
 from positions import Positions
 from silhuet import Silhuet
+import time
+import winsound
 
 _positions = Positions("pos")   # initialising a Positions class
 _silhuet = Silhuet("sil")       # initialising a Silhuet class
 points = 0                      # the score of the user
+delay = 0                       # variable used for delaying the program when the user makes a correct move
+
 
 # appllyes some amout of open and close operation on an image
 def open_close(img):
@@ -34,6 +38,7 @@ def PointHandeler(in_image):
     font_scale = 1                          # fontScale
     color = (255, 0, 0)                     # Blue color in BGR
     thickness = 2                           # Line thickness of 2 px
+    # show the "points" text on the image
     out = cv2.putText(in_image, point_text, org, font, font_scale, color, thickness, cv2.LINE_AA)
     return out
 
@@ -45,6 +50,7 @@ def positions(i):
         2: (250, 170, 90, 415),
     }
     return switcher.get(i)
+
 
 if __name__ == "__main__":
     capture = cv2.VideoCapture(0)  # the output from the camera
@@ -58,17 +64,18 @@ if __name__ == "__main__":
 
         if not calibrated:
             if cv2.waitKey(1) & 0xFF == ord('c'):  # if c is pressed
-                background_function = calibrate()
+                background_function = calibrate()  # sets the variable background_function to what the function calibrate() returns
                 calibrated = True
         if calibrated:
             background_img = background_function.apply(source_image, None, 0.001)
-            # cv2.imshow('frame', background_img)
+
 
             opcl_img = open_close(background_img)  # calls the open close function on the image
-            (thresh, out_img) = cv2.threshold(opcl_img, 200, 255, cv2.THRESH_BINARY)  # appllyes a threshold on the
-            # image to remove noice
+            (thresh, out_img) = cv2.threshold(opcl_img, 200, 255, cv2.THRESH_BINARY)  # appllyes a threshold on the image to remove noice
 
-            source_image = _silhuet.drawSilhuets(p, source_image)
+            time.sleep(delay)
+            source_image = _silhuet.drawSilhuets(p, source_image)   # calls the function drawSilhuets() from the class silhuet
+            delay = 0
 
             # asigns positions for pos1 and pos2 based on the function positions()
             pos1 = (positions(p)[0], positions(p)[1])
@@ -77,6 +84,9 @@ if __name__ == "__main__":
             # calls the draw_positions_points() functions from the Positions class
             if _positions.draw_positions_points(pos2, pos1, out_img, source_image):
                 points = points + 1
+                source_image = _silhuet.CorectMoveFeedback(p, source_image) # calls the function CorectMoveFeedback() from the class silhuet
+                delay = 1
+                winsound.PlaySound("bling.wav", winsound.SND_ASYNC)
                 if p < 2:
                     p = p + 1
                 else:
@@ -84,8 +94,9 @@ if __name__ == "__main__":
 
             cv2.imshow('opCl image', out_img)
 
-        PointHandeler(source_image)
+        PointHandeler(source_image) # calls the function that shows the point text on the image
         cv2.imshow('source_image', source_image)
 
+        # quit the program if q is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
