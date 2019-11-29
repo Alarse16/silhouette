@@ -81,21 +81,22 @@ def positions(pose_index):
 
     return detection_points.get(pose_index)
 
+
 if __name__ == "__main__":
-    capture = cv2.VideoCapture(0)   # Camera footage
-    calibrated = False              # Whether the detection has been started
-    pose_index = 0                  # 0, 1 or 2
+    capture = cv2.VideoCapture(0)  # Camera footage
+    segmentation_function = None  # The process which segments the image into foreground and background
+    pose_index = 0  # 0, 1 or 2
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
 
-        if not calibrated:
+        if segmentation_function is None:
             if cv2.waitKey(1) & 0xFF == ord('c'):
-                calibrated = True
-        if calibrated:
-            segmented_image = background_subtraction().apply(source_image, None, 0.001)
+                segmentation_function = background_subtraction()
+        if not segmentation_function is None:
+            segmented_image = segmentation_function.apply(source_image, None, 0.001)
 
             open_closed_image = open_close(segmented_image)
             (_, out_img) = cv2.threshold(open_closed_image, 200, 255, cv2.THRESH_BINARY)  # Removes noise
