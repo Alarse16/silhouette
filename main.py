@@ -86,6 +86,7 @@ def positions(pose_index):
     return detection_points.get(pose_index)
 
 
+# this function removes the black border that can occurs on some images
 def remove_black_borders(source_image):
     gray = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # convert to gray scale
     _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)  # make a threshold for black
@@ -103,7 +104,8 @@ if __name__ == "__main__":
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
-        source_image = remove_black_borders(source_image)
+        if source_image[:, :, 0] == (0, 0, 0):  # if the corner pixel is black (the image has a black border)
+            source_image = remove_black_borders(source_image)
         source_image = cv2.resize(source_image, (640, 480))   # resize the image to a correct size
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
