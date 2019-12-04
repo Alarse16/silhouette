@@ -92,6 +92,7 @@ if __name__ == "__main__":
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
+        source_image = cv2.resize(source_image, (640, 480))   # resize the image to a correct size
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
 
