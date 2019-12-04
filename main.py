@@ -86,6 +86,16 @@ def positions(pose_index):
     return detection_points.get(pose_index)
 
 
+def remove_black_borders(source_image):
+    gray = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # convert to gray scale
+    _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)  # make a threshold for black
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # find edges of image
+    cnt = contours[0]  # save the edges
+    x, y, w, h = cv2.boundingRect(cnt)  # make a boundingbox to contain image inside
+    source_image = source_image[y:y + h, x:x + w]  # save image within bounding rect
+    return source_image
+
+
 if __name__ == "__main__":
     capture = cv2.VideoCapture(0)  # Camera footage
     segmentation_function = None  # The process which segments the image into foreground and background
@@ -93,6 +103,7 @@ if __name__ == "__main__":
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
+        source_image = remove_black_borders(source_image)
         source_image = cv2.resize(source_image, (640, 480))   # resize the image to a correct size
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
