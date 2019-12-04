@@ -11,20 +11,19 @@ LEARNING_RATE = 0.001
 score = 0  # the user score
 delay = 0  # number of seconds to freeze the screen after the user hits the correct pose
 
+
 def draw_silhouette(pose_index, camera_frame):
     image_name = ('Tai_Chi_Pose_' + str(pose_index) + '.jpg')
-    h, w = camera_frame.shape[:2]   # getting the size of the camera
     pose_image = cv2.imread(image_name)
-    pose_image = cv2.resize(pose_image, (w, h))   # resize the image to fit the camera size
+
     alpha = 0.7
     return np.uint8(camera_frame * alpha + pose_image * (1 - alpha))
 
 
 def draw_silhouette_in_green(pose_index, camera_frame):
     image_name = ('Tai_Chi_Pose_' + str(pose_index) + '_G' + '.jpg')
-    h, w = camera_frame.shape[:2]  # getting the size of the camera
     pose_image = cv2.imread(image_name)
-    pose_image = cv2.resize(pose_image, (w, h))  # resize the image to fit the camera size
+
     alpha = 0.7
     return np.uint8(camera_frame * alpha + pose_image * (1 - alpha))
 
@@ -94,6 +93,7 @@ if __name__ == "__main__":
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
+        source_image = cv2.resize(source_image, (640, 480))   # resize the image to a correct size
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
 
