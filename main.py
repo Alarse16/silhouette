@@ -104,11 +104,11 @@ if __name__ == "__main__":
 
     while True:
         _, source_image = capture.read()  # Current frame from the camera footage
+        cornerValue = source_image[0, 0]  # the RGB value of the top left corner of the image
+        if cornerValue[0] == 0 and cornerValue[1] == 0 and cornerValue[2] == 0:  # if the corner pixel is black (the image has a black border)
+            source_image = remove_black_borders(source_image)
         source_image = cv2.resize(source_image, (640, 480))   # resize the image to a correct size
         source_image = cv2.flip(source_image, 1)  # Flips the frame vertically, so it works like looking at mirror
-        cornerValue = source_image[0, 0]  # the RGB value of the top left corner of the image
-        if cornerValue[0] == 0 and cornerValue[1] == 0 and cornerValue[3] == 0:  # if the corner pixel is black (the image has a black border)
-            source_image = remove_black_borders(source_image)
         gray_img = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # Converts the image to grayscale
 
         if segmentation_function is None:
