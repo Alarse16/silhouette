@@ -29,7 +29,9 @@ def draw_silhouette_in_green(pose_index, camera_frame):
 
 
 # Returns True if both of the hit points are hit
-def are_hit_points_hit(hit_point1, hit_point2, segmented_img):
+def are_hit_points_hit(hit_point1, hit_point2, segmented_img, source_im):
+    source_im = cv2.circle(source_im, hit_point1, 5, (255, 0, 0), 2)
+    source_im = cv2.circle(source_im, hit_point2, 5, (255, 0, 0), 2)
     # If both points are filled
     if segmented_img[hit_point1] == 255 and segmented_img[hit_point2] == 255:
         return True
@@ -130,7 +132,7 @@ if __name__ == "__main__":
             hitpoint1 = (positions(pose_index)[0], positions(pose_index)[1])
             hitpoint2 = (positions(pose_index)[2], positions(pose_index)[3])
 
-            if are_hit_points_hit(hitpoint2, hitpoint1, out_img):
+            if are_hit_points_hit(hitpoint2, hitpoint1, out_img, source_image):
                 score = score + 1
                 source_image = draw_silhouette_in_green(pose_index, source_image)
                 delay = 1  # Frame after this one should be freezed for one second
