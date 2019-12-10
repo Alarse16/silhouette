@@ -6,7 +6,7 @@ import winsound
 
 # How fast the background subtraction algorithm learns the background to subtract
 # A number between 0 and 1
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.00001
 
 score = 0  # the user score
 delay = 0  # number of seconds to freeze the screen after the user hits the correct pose
@@ -30,7 +30,14 @@ def draw_silhouette_in_green(pose_index, camera_frame):
 
 # Returns True if both of the hit points are hit
 def are_hit_points_hit(hit_point1, hit_point2, segmented_img):
-    return segmented_img[hit_point1] == 255 and segmented_img[hit_point2] == 255
+    # these are circles draw on the detection image based on the detection points 
+    segmented_img = cv2.circle(segmented_img, (hit_point1[1], hit_point1[0]), 5, (255, 0, 0), 2)
+    segmented_img = cv2.circle(segmented_img, (hit_point2[1], hit_point2[0]), 5, (255, 0, 0), 2)
+    # If both points are filled
+    if segmented_img[hit_point1] == 255 and segmented_img[hit_point2] == 255:
+        return True
+
+    return False
 
 
 # Applies one open operation and a hundred close operations
